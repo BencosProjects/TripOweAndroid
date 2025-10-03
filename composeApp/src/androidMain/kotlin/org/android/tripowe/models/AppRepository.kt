@@ -16,14 +16,17 @@ class AppRepository {
     private val _participants = MutableStateFlow(listOf(
         Participant(1, "אליס"),
         Participant(2, "בוב"),
-        Participant(3, "צ'ארלי")
+        Participant(3, "צ'ארלי"),
+        Participant(4, "דני")
+
     ))
     val participants = _participants.asStateFlow()
 
     private val _expenses = MutableStateFlow(listOf(
         Expense(1, "בנזין", 1000.0, 1), // אליס
         Expense(2, "אוכל", 800.0, 2),   // בוב
-        Expense(3, "לינה", 600.0, 3)    // צ'ארלי
+        Expense(3, "לינה", 600.0, 3),    // צ'ארלי
+        Expense(4, "סמים", 200.0, 4) //דני
     ))
     val expenses = _expenses.asStateFlow()
 
