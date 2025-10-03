@@ -23,8 +23,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.jetbrains.compose.charts.pie.PieChart
-import org.jetbrains.compose.charts.pie.chartPie
+import org.android.tripowe.models.AppRepository
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
