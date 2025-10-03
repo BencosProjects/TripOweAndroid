@@ -21,9 +21,9 @@ class AppRepository {
     val participants = _participants.asStateFlow()
 
     private val _expenses = MutableStateFlow(listOf(
-        Expense(1, "בנזין", 1000.0, 1), // אליס שילמה
-        Expense(2, "אוכל", 800.0, 2),   // בוב שילם
-        Expense(3, "לינה", 600.0, 3)    // צ'ארלי שילם
+        Expense(1, "בנזין", 1000.0, 1), // אליס
+        Expense(2, "אוכל", 800.0, 2),   // בוב
+        Expense(3, "לינה", 600.0, 3)    // צ'ארלי
     ))
     val expenses = _expenses.asStateFlow()
 
@@ -36,7 +36,6 @@ class AppRepository {
         _currentTrip.value = _trips.value.find { it.id == tripId } ?: _currentTrip.value
     }
 
-    // חישוב סכום ששולם על ידי כל משתתף
     fun getPaymentsByParticipant(): Map<Participant, Double> {
         val payments = mutableMapOf<Participant, Double>()
         _participants.value.forEach { participant ->
