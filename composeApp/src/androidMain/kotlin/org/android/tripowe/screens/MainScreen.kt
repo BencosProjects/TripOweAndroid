@@ -44,6 +44,20 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
     var showAddTrip by remember { mutableStateOf(false) }
     var newTripName by remember { mutableStateOf("") }
 
+    // Dynamic color list for pie chart
+    val colors = listOf(
+        Color(0xFF2196F3), // Blue
+        Color(0xFF4CAF50), // Green
+        Color(0xFFF44336), // Red
+        Color(0xFFFFC107), // Yellow
+        Color(0xFF9C27B0), // Purple
+        Color(0xFF00BCD4), // Cyan
+        Color(0xFFFF5722), // Deep Orange
+        Color(0xFF795548), // Brown
+        Color(0xFF607D8B), // Blue Grey
+        Color(0xFFE91E63)  // Pink
+    )
+
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp)
     ) {
@@ -126,7 +140,7 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
             }
         }
 
-        // Pie Chart (Custom with Canvas - fixed without external libs)
+        // Pie Chart (Custom with Canvas and dynamic colors)
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -145,15 +159,11 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
 
                 val total = totalAmount
                 var startAngle = 0f
-                participants.forEach { participant ->
+                participants.forEachIndexed { index, participant ->
                     val amount = payments[participant] ?: 0.0
                     if (total > 0) {
                         val sweepAngle = (amount / total * 360f).toFloat()
-                        val color = when (participant.id) {
-                            1 -> Color.Blue
-                            2 -> Color.Green
-                            else -> Color.Red
-                        }
+                        val color = colors[index % colors.size] // Cycle through colors
                         drawArc(
                             color = color,
                             startAngle = startAngle,
