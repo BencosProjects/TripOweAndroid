@@ -29,8 +29,11 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+
             // לניווט (אופציונלי)
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+            implementation("androidx.activity:activity-compose:1.9.2")
+            implementation("androidx.compose.material:material-icons-extended:1.7.4")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -66,6 +69,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.material3.android)
     debugImplementation(compose.uiTooling)
 }
 

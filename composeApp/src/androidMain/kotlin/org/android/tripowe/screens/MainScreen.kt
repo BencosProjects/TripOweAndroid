@@ -12,10 +12,10 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Payment
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.draw.clip
 import org.android.tripowe.models.AppRepository
 import org.android.tripowe.models.Participant
 import org.android.tripowe.models.format
@@ -81,11 +82,11 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
                             label = { Text("בחר טיול") },
                             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                             colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = Color(0xFF0D47A1), // Dark blue for modern look
+                                focusedBorderColor = Color(0xFF0D47A1),
                                 unfocusedBorderColor = Color.Gray,
                                 focusedLabelColor = Color(0xFF0D47A1)
                             ),
-                            modifier = Modifier.menuAnchor().fillMaxWidth().clip(RoundedCornerShape(50.dp)) // Rounded modern design
+                            modifier = Modifier.menuAnchor().fillMaxWidth().clip(RoundedCornerShape(50.dp))
                         )
 
                         ExposedDropdownMenu(
@@ -133,7 +134,7 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
                             unfocusedBorderColor = Color.Gray,
                             focusedLabelColor = Color(0xFF0D47A1)
                         ),
-                        modifier = Modifier.weight(1f).clip(RoundedCornerShape(50.dp)) // Consistent modern design
+                        modifier = Modifier.weight(1f).clip(RoundedCornerShape(50.dp))
                     )
                     IconButton(
                         onClick = {
@@ -154,7 +155,7 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .padding(vertical = 8.dp), // Reduced for more space
+                    .padding(vertical = 8.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Canvas(
@@ -193,11 +194,11 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp) // Reduced
+                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
             )
 
             // Debt summary text
-            val userBalance = repo.getUserDebtSummary().contains("owe you") // Simple check for color
+            val userBalance = repo.getUserDebtSummary().contains("owe you")
             Text(
                 text = debtSummary,
                 fontSize = 16.sp,
@@ -209,8 +210,8 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
             // Payments table (scrollable, modern, centered, with color legend)
             Card(
                 modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
-                shape = RoundedCornerShape(16.dp), // Modern rounded card
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFFAFAFA)) // Light modern background
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFFAFAFA))
             ) {
                 Column {
                     Row(
@@ -222,19 +223,19 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
                         Text("משתתף", modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
                         Text("שילם", modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
                     }
-                    LazyColumn(modifier = Modifier.height(150.dp)) { // Scrollable after ~5 rows
+                    LazyColumn(modifier = Modifier.height(150.dp)) {
                         items(participants) { participant ->
                             val index = participants.indexOf(participant)
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = 4.dp, vertical = 2.dp), // Reduced spacing
+                                    .padding(horizontal = 4.dp, vertical = 2.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Box(
                                     modifier = Modifier
                                         .size(12.dp)
-                                        .background(colors[index % colors.size], shape = CircleShape) // Color legend
+                                        .background(colors[index % colors.size], shape = CircleShape)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
