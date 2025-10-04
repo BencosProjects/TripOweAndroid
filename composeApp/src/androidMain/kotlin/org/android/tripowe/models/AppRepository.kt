@@ -39,7 +39,7 @@ class AppRepository {
     val expenses = _expenses.asStateFlow()
 
     fun addTrip(name: String) {
-        val newId = _trips.value.size + 1
+        val newId = _trips.value.size + 1//
         _trips.value = _trips.value + Trip(newId, name)
     }
 
