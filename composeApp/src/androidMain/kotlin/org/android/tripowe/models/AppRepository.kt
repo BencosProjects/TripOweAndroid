@@ -26,7 +26,7 @@ class AppRepository {
         Expense(1, "בנזין", 1000.0, 1), // אליס
         Expense(2, "אוכל", 800.0, 2),   // בוב
         Expense(3, "לינה", 600.0, 3),    // צ'ארלי
-        Expense(4, "סמים", 2000.0, 4) //דני
+        Expense(4, "סמים", 600.0, 4) //דני
     ))
     val expenses = _expenses.asStateFlow()
 
