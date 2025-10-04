@@ -24,22 +24,21 @@ class AppRepository {
     val trips = _trips.asStateFlow()
 
     private val _participants = MutableStateFlow(listOf(
-    Participant(1, "אליס"),
-    Participant(2, "בוב"),
-    Participant(3, "צ'ארלי"),
-))
+        Participant(1, "אליס"),
+        Participant(2, "בוב"),
+        Participant(3, "צ'ארלי")
+    ))
     val participants = _participants.asStateFlow()
 
     private val _expenses = MutableStateFlow(listOf(
-    Expense(1, "בנזין", 1000.0, 1),
-    Expense(2, "אוכל", 800.0, 2),
-    Expense(3, "לינה", 600.0, 3),
-    Expense(4, "2", 200.0, 2),
-))
+        Expense(1, "בנזין", 1000.0, 1), // אליס
+        Expense(2, "אוכל", 1000.0, 2),   // בוב
+        Expense(3, "לינה", 600.0, 3)     // צ'ארלי
+    ))
     val expenses = _expenses.asStateFlow()
 
     fun addTrip(name: String) {
-        val newId = _trips.value.size + 1//
+        val newId = _trips.value.size + 1
         _trips.value = _trips.value + Trip(newId, name)
     }
 
@@ -60,6 +59,7 @@ class AppRepository {
     val totalAmount: Double
         get() = _expenses.value.sumOf { it.amount }
 
+    // פונקציה מתוקנת: חישוב סיכום חובות עם חלוקה פרופורציונלית
     fun getUserDebtSummary(userId: Int = 1): String {
         val participants = _participants.value
         val expenses = _expenses.value
@@ -89,15 +89,44 @@ class AppRepository {
         val userName = participants.find { it.id == userId }?.name ?: "You"
 
         if (userBalance > zero) {
-            val debtsToUser = participants
-                .filter { it.id != userId && (balances[it.id] ?: zero) < zero }
-                .map { p -> "${p.name} owes you ${(-(balances[p.id] ?: zero)).format(2)}\$" }
-            return if (debtsToUser.isNotEmpty()) debtsToUser.joinToString(" and ") else "No specific debts to you"
+            // חייבים למשתמש – חלק את חובות החייבים פרופורציונלית בין הנושים (כולל המשתמש)
+            val positiveBalances = balances.filterValues { it > zero }.values.sumOf { it }
+            if (positiveBalances == zero) return "No creditors – cannot calculate specific debts"
+
+            val debtsToUser = mutableListOf<String>()
+            val debtors = participants.filter { it.id != userId && (balances[it.id] ?: zero) < zero }
+            debtors.forEach { debtor ->
+                val debtorDebt = -(balances[debtor.id] ?: zero) // חוב חיובי של החייב
+                val owedToUser = debtorDebt * (userBalance / positiveBalances) // חלק פרופורציונלי
+                if (owedToUser > zero) {
+                    debtsToUser.add("${debtor.name} owes you ${owedToUser.format(2)}$")
+                }
+            }
+            return if (debtsToUser.isNotEmpty()) {
+                debtsToUser.joinToString(" and ")
+            } else {
+                "No specific debts to you"
+            }
         } else if (userBalance < zero) {
-            val userDebts = participants
-                .filter { it.id != userId && (balances[it.id] ?: zero) > zero }
-                .map { p -> "You owe ${balances[p.id]?.format(2)}\$ to ${p.name}" }
-            return if (userDebts.isNotEmpty()) userDebts.joinToString(" and ") else "No specific debts from you"
+            // המשתמש חייב – חלק את החוב שלו פרופורציונלית בין הנושים
+            val negativeBalance = -userBalance // חוב חיובי של המשתמש
+            val positiveBalances = balances.filterValues { it > zero }.values.sumOf { it }
+            if (positiveBalances == zero) return "No creditors – cannot calculate specific debts"
+
+            val userDebts = mutableListOf<String>()
+            val creditors = participants.filter { it.id != userId && (balances[it.id] ?: zero) > zero }
+            creditors.forEach { creditor ->
+                val creditorShare = balances[creditor.id] ?: zero
+                val owedToCreditor = negativeBalance * (creditorShare / positiveBalances) // חלק פרופורציונלי
+                if (owedToCreditor > zero) {
+                    userDebts.add("You owe ${owedToCreditor.format(2)}$ to ${creditor.name}")
+                }
+            }
+            return if (userDebts.isNotEmpty()) {
+                userDebts.joinToString(" and ")
+            } else {
+                "No specific debts from you"
+            }
         } else {
             return "No debts for $userName"
         }
