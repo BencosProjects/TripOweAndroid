@@ -1,6 +1,5 @@
 package org.android.tripowe.screens
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,14 +16,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.draw.clip
 import org.android.tripowe.models.AppRepository
 import org.android.tripowe.models.Participant
 import org.android.tripowe.models.format
@@ -60,11 +61,16 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(16.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp) // Standard MD3 margin
+                .semantics { contentDescription = "Trip expense overview" }
         ) {
             // Top row
             Row(
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp), // MD3 spacer
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -80,14 +86,18 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
                             value = currentTrip.name,
                             onValueChange = { },
                             readOnly = true,
-                            label = { Text("בחר טיול") },
+                            label = { Text("Select Trip") },
                             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                             colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = Color(0xFF0D47A1),
-                                unfocusedBorderColor = Color.Gray,
-                                focusedLabelColor = Color(0xFF0D47A1)
+                                focusedBorderColor = MaterialTheme.colorScheme.primary, // Adaptive
+                                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                                focusedLabelColor = MaterialTheme.colorScheme.primary
                             ),
-                            modifier = Modifier.menuAnchor().fillMaxWidth().clip(RoundedCornerShape(50.dp))
+                            modifier = Modifier
+                                .menuAnchor()
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(12.dp)) // MD3 standard radius
+                                .semantics { contentDescription = "Select trip dropdown" }
                         )
 
                         ExposedDropdownMenu(
@@ -104,7 +114,7 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
                                 )
                             }
                             DropdownMenuItem(
-                                text = { Text("הוסף טיול חדש") },
+                                text = { Text("Add New Trip") },
                                 onClick = {
                                     showAddTrip = true
                                     expanded = false
@@ -115,28 +125,43 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
                 }
 
                 // Settings button
-                IconButton(onClick = { /* Navigate to settings */ }) {
-                    Icon(Icons.Default.Settings, contentDescription = "הגדרות")
+                IconButton(
+                    onClick = { /* Navigate to settings */ },
+                    modifier = Modifier
+                        .size(48.dp) // MD3 min touch target 48.dp
+                        .semantics { contentDescription = "Settings" }
+                ) {
+                    Icon(
+                        Icons.Default.Settings,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
 
             // Add trip input
             if (showAddTrip) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp), // MD3 spacer
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     OutlinedTextField(
                         value = newTripName,
                         onValueChange = { newTripName = it },
-                        label = { Text("שם טיול חדש") },
+                        label = { Text("New Trip Name") },
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = Color(0xFF0D47A1),
-                            unfocusedBorderColor = Color.Gray,
-                            focusedLabelColor = Color(0xFF0D47A1)
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                            focusedLabelColor = MaterialTheme.colorScheme.primary
                         ),
-                        modifier = Modifier.weight(1f).clip(RoundedCornerShape(50.dp))
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(12.dp)) // MD3 standard
+                            .semantics { contentDescription = "New trip name" }
                     )
+                    Spacer(modifier = Modifier.width(8.dp))
                     IconButton(
                         onClick = {
                             if (newTripName.isNotBlank()) {
@@ -144,23 +169,32 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
                                 newTripName = ""
                                 showAddTrip = false
                             }
-                        }
+                        },
+                        modifier = Modifier
+                            .size(48.dp)
+                            .semantics { contentDescription = "Add trip" }
                     ) {
-                        Icon(Icons.Default.Add, contentDescription = "הוסף")
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                     }
                 }
             }
 
-            // Pie Chart (fixed height to reduce space)
+            // Pie Chart (dynamic height)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.5f) // Fixed height to reduce space
-                    .padding(vertical = 8.dp),
+                    .heightIn(min = 160.dp, max = 200.dp) // Dynamic, responsive to screen
+                    .padding(vertical = 8.dp), // MD3 spacer
                 contentAlignment = Alignment.Center
             ) {
                 Canvas(
-                    modifier = Modifier.size(200.dp)
+                    modifier = Modifier
+                        .size(180.dp) // Slightly smaller for better fit
+                        .semantics { contentDescription = "Expense pie chart" }
                 ) {
                     val canvasWidth = size.width
                     val canvasHeight = size.height
@@ -189,63 +223,90 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
                 }
             }
 
-            // Total text (reduced padding)
+            // Total text
             Text(
                 text = "Total ${totalAmount.format(0)}$",
-                fontSize = 18.sp,
+                style = MaterialTheme.typography.headlineSmall, // MD3 typography
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp) // MD3 spacer
+                    .semantics { contentDescription = "Total amount: ${totalAmount.format(0)}$" }
             )
 
             // Debt summary text
-            val userBalance = repo.getUserDebtSummary().contains("owe you")
+            val userBalance = debtSummary.contains("owe you")
             Text(
                 text = debtSummary,
-                fontSize = 16.sp,
-                color = if (userBalance) Color.Green else if (debtSummary.contains("owes")) Color.Red else Color.Black,
+                style = MaterialTheme.typography.bodyMedium, // MD3 typography
+                color = if (userBalance) MaterialTheme.colorScheme.primary else if (debtSummary.contains("owes")) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp) // MD3 spacer
+                    .semantics { contentDescription = "Debt summary: $debtSummary" }
             )
 
-
+            // Payments table (dynamic height, improved spacing)
             Card(
-                modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFFAFAFA))
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp), // MD3 margin
+                shape = RoundedCornerShape(12.dp), // MD3 standard radius
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant), // Adaptive surface
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp) // MD3 depth
             ) {
                 Column {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.primaryContainer)
-                            .padding(8.dp)
+                            .padding(horizontal = 16.dp, vertical = 12.dp) // MD3 padding (16.dp horizontal, 12.dp vertical)
                     ) {
-                        Text("משתתף", modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, color = Color(0xFF4A148C)) // Dark purple
-                        Text("שילם", modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, color = Color(0xFF4A148C)) // Dark purple
-                        // Info button in the header row, rightmost column, round with 'i' icon
+                        Text(
+                            "Participant",
+                            modifier = Modifier.weight(1f),
+                            style = MaterialTheme.typography.titleMedium, // MD3 header
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                        Text(
+                            "Paid",
+                            modifier = Modifier.weight(1f),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                        // Info button in the header row, rightmost column
                         IconButton(
                             onClick = { /* TODO: Navigate to info page */ },
                             modifier = Modifier
-                                .size(32.dp) // Slightly larger to ensure visibility
-                                .align(Alignment.CenterVertically)
-                                .background(MaterialTheme.colorScheme.primaryContainer, shape = CircleShape)
+                                .size(40.dp) // MD3 min touch target
+                                .semantics { contentDescription = "More info" }
                         ) {
                             Icon(
                                 Icons.Default.Info,
-                                contentDescription = "מידע נוסף",
-                                modifier = Modifier.size(20.dp),
-                                tint = Color(0xFF4A148C) // Dark purple to match text
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                modifier = Modifier.size(20.dp)
                             )
                         }
                     }
-                    LazyColumn(modifier = Modifier.height(150.dp)) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .heightIn(min = 120.dp, max = 200.dp) // Dynamic height
+                            .padding(horizontal = 8.dp) // MD3 inner padding
+                    ) {
                         items(participants) { participant ->
                             val index = participants.indexOf(participant)
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = 4.dp, vertical = 2.dp),
+                                    .padding(horizontal = 16.dp, vertical = 8.dp), // MD3 row padding
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Box(
@@ -257,12 +318,16 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
                                 Text(
                                     participant.name,
                                     modifier = Modifier.weight(1f),
-                                    textAlign = TextAlign.Center
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    textAlign = TextAlign.Center,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                                 Text(
                                     "${(payments[participant] ?: 0.0).format(0)}$",
                                     modifier = Modifier.weight(1f),
-                                    textAlign = TextAlign.Center
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    textAlign = TextAlign.Center,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         }
@@ -278,9 +343,14 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),
-            containerColor = MaterialTheme.colorScheme.primary
+            containerColor = MaterialTheme.colorScheme.primary,
+            elevation = FloatingActionButtonDefaults.elevation(6.dp) // MD3 elevation
         ) {
-            Icon(Icons.Default.Payment, contentDescription = "תיעוד תשלום נוסף")
+            Icon(
+                Icons.Default.Payment,
+                contentDescription = "Record additional payment",
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
         }
     }
 }
