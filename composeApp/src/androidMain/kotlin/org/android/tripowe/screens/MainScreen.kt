@@ -1,5 +1,6 @@
 package org.android.tripowe.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -207,65 +208,64 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
                 modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
             )
 
-            // Payments table (scrollable, modern, centered, with color legend)
-            Box {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFFAFAFA))
-                ) {
-                    Column {
-                        Row(
+            Card(
+                modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFFAFAFA))
+            ) {
+                Column {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.primaryContainer)
+                            .padding(8.dp)
+                    ) {
+                        Text("משתתף", modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+                        Text("שילם", modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+                        // Info button in the header row, rightmost column, round with 'i' icon
+                        IconButton(
+                            onClick = { /* TODO: Navigate to info page */ },
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .background(MaterialTheme.colorScheme.primaryContainer)
-                                .padding(8.dp)
+                                .size(32.dp) // Slightly larger to ensure visibility
+                                .align(Alignment.CenterVertically)
+                                .background(MaterialTheme.colorScheme.primaryContainer, shape = CircleShape)
                         ) {
-                            Text("משתתף", modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
-                            Text("שילם", modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+                            Icon(
+                                Icons.Default.Info,
+                                contentDescription = "מידע נוסף",
+                                modifier = Modifier.size(20.dp),
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer // Solid tint for visibility
+                            )
                         }
-                        LazyColumn(modifier = Modifier.height(150.dp)) {
-                            items(participants) { participant ->
-                                val index = participants.indexOf(participant)
-                                Row(
+                    }
+                    LazyColumn(modifier = Modifier.height(150.dp)) {
+                        items(participants) { participant ->
+                            val index = participants.indexOf(participant)
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 4.dp, vertical = 2.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Box(
                                     modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 4.dp, vertical = 2.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(12.dp)
-                                            .background(colors[index % colors.size], shape = CircleShape)
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(
-                                        participant.name,
-                                        modifier = Modifier.weight(1f),
-                                        textAlign = TextAlign.Center
-                                    )
-                                    Text(
-                                        "${(payments[participant] ?: 0.0).format(0)}$",
-                                        modifier = Modifier.weight(1f),
-                                        textAlign = TextAlign.Center
-                                    )
-                                }
+                                        .size(12.dp)
+                                        .background(colors[index % colors.size], shape = CircleShape)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    participant.name,
+                                    modifier = Modifier.weight(1f),
+                                    textAlign = TextAlign.Center
+                                )
+                                Text(
+                                    "${(payments[participant] ?: 0.0).format(0)}$",
+                                    modifier = Modifier.weight(1f),
+                                    textAlign = TextAlign.Center
+                                )
                             }
                         }
                     }
-                }
-
-                // Info button on top right of table
-                FloatingActionButton(
-                    onClick = { /* TODO: Navigate to info page */ },
-                    shape = CircleShape,
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .size(40.dp) // Small size
-                        .offset(x = 16.dp, y = (-16.dp)), // Position above top right corner
-                    containerColor = MaterialTheme.colorScheme.secondary
-                ) {
-                    Icon(Icons.Default.Info, contentDescription = "מידע נוסף")
                 }
             }
         }
