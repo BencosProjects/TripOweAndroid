@@ -27,7 +27,10 @@ class AppRepository {
     Participant(1, "אליס"),
     Participant(2, "בוב"),
     Participant(3, "צ'ארלי"),
-    Participant(4, "shon")
+    Participant(4, "shon"),
+    Participant(5, "a"),
+    Participant(6, "b"),
+    Participant(7, "c")
 ))
     val participants = _participants.asStateFlow()
 
@@ -36,6 +39,9 @@ class AppRepository {
     Expense(2, "אוכל", 400.0, 2),
     Expense(3, "לינה", 500.0, 3),
     Expense(4, "drugs", 300.0, 4),
+    Expense(5, "a", 100.0, 5),
+    Expense(6, "b", 200.0, 6),
+    Expense(7, "c", 50.0, 7)
 ))
     val expenses = _expenses.asStateFlow()
 

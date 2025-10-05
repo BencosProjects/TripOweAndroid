@@ -59,7 +59,10 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
     var showAddTrip by remember { mutableStateOf(false) }
     var newTripName by remember { mutableStateOf("") }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .systemBarsPadding() // מוסיף padding אוטומטי לסרגלים
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
