@@ -208,6 +208,7 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
                 modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
             )
 
+
             Card(
                 modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
                 shape = RoundedCornerShape(16.dp),
@@ -220,8 +221,8 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
                             .background(MaterialTheme.colorScheme.primaryContainer)
                             .padding(8.dp)
                     ) {
-                        Text("משתתף", modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
-                        Text("שילם", modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+                        Text("משתתף", modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, color = Color(0xFF4A148C)) // Dark purple
+                        Text("שילם", modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, color = Color(0xFF4A148C)) // Dark purple
                         // Info button in the header row, rightmost column, round with 'i' icon
                         IconButton(
                             onClick = { /* TODO: Navigate to info page */ },
@@ -234,7 +235,7 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
                                 Icons.Default.Info,
                                 contentDescription = "מידע נוסף",
                                 modifier = Modifier.size(20.dp),
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer // Solid tint for visibility
+                                tint = Color(0xFF4A148C) // Dark purple to match text
                             )
                         }
                     }
