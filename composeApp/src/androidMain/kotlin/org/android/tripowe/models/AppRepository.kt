@@ -27,17 +27,15 @@ class AppRepository {
     Participant(1, "אליס"),
     Participant(2, "בוב"),
     Participant(3, "צ'ארלי"),
-    Participant(4, "shon"),
-    Participant(5, "shir")
+    Participant(4, "shon")
 ))
     val participants = _participants.asStateFlow()
 
     private val _expenses = MutableStateFlow(listOf(
-    Expense(1, "בנזין", 1000.0, 1),
-    Expense(2, "אוכל", 1000.0, 2),
-    Expense(3, "לינה", 1000.0, 3),
-    Expense(4, "drugs", 1000.0, 4),
-    Expense(5, "a", 900.0, 5)
+    Expense(1, "בנזין", 400.0, 1),
+    Expense(2, "אוכל", 400.0, 2),
+    Expense(3, "לינה", 500.0, 3),
+    Expense(4, "drugs", 300.0, 4),
 ))
     val expenses = _expenses.asStateFlow()
 

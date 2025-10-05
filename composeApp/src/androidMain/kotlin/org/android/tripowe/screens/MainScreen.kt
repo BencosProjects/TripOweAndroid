@@ -9,10 +9,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Payment
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -150,11 +150,11 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
                 }
             }
 
-            // Pie Chart (reduced padding)
+            // Pie Chart (fixed height to reduce space)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)
+                    .fillMaxHeight(0.5f) // Fixed height to reduce space
                     .padding(vertical = 8.dp),
                 contentAlignment = Alignment.Center
             ) {
@@ -208,49 +208,64 @@ fun MainScreen(repo: AppRepository = remember { AppRepository() }) {
             )
 
             // Payments table (scrollable, modern, centered, with color legend)
-            Card(
-                modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFFAFAFA))
-            ) {
-                Column {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.primaryContainer)
-                            .padding(8.dp)
-                    ) {
-                        Text("משתתף", modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
-                        Text("שילם", modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
-                    }
-                    LazyColumn(modifier = Modifier.height(150.dp)) {
-                        items(participants) { participant ->
-                            val index = participants.indexOf(participant)
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 4.dp, vertical = 2.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Box(
+            Box {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFFAFAFA))
+                ) {
+                    Column {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.primaryContainer)
+                                .padding(8.dp)
+                        ) {
+                            Text("משתתף", modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+                            Text("שילם", modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+                        }
+                        LazyColumn(modifier = Modifier.height(150.dp)) {
+                            items(participants) { participant ->
+                                val index = participants.indexOf(participant)
+                                Row(
                                     modifier = Modifier
-                                        .size(12.dp)
-                                        .background(colors[index % colors.size], shape = CircleShape)
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    participant.name,
-                                    modifier = Modifier.weight(1f),
-                                    textAlign = TextAlign.Center
-                                )
-                                Text(
-                                    "${(payments[participant] ?: 0.0).format(0)}$",
-                                    modifier = Modifier.weight(1f),
-                                    textAlign = TextAlign.Center
-                                )
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 4.dp, vertical = 2.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(12.dp)
+                                            .background(colors[index % colors.size], shape = CircleShape)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        participant.name,
+                                        modifier = Modifier.weight(1f),
+                                        textAlign = TextAlign.Center
+                                    )
+                                    Text(
+                                        "${(payments[participant] ?: 0.0).format(0)}$",
+                                        modifier = Modifier.weight(1f),
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
                             }
                         }
                     }
+                }
+
+                // Info button on top right of table
+                FloatingActionButton(
+                    onClick = { /* TODO: Navigate to info page */ },
+                    shape = CircleShape,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .size(40.dp) // Small size
+                        .offset(x = 16.dp, y = (-16.dp)), // Position above top right corner
+                    containerColor = MaterialTheme.colorScheme.secondary
+                ) {
+                    Icon(Icons.Default.Info, contentDescription = "מידע נוסף")
                 }
             }
         }
