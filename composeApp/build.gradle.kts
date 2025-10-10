@@ -29,8 +29,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-
-            // לניווט (אופציונלי)
+            implementation("androidx.compose.animation:animation:1.6.0")
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
             implementation("androidx.activity:activity-compose:1.9.2")
             implementation("androidx.compose.material:material-icons-extended:1.7.4")
